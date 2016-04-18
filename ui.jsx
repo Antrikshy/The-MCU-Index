@@ -26,7 +26,6 @@ var SearchBox = React.createClass({
             source: people,
             templates: {
                 suggestion: function (data) {
-                    console.log(data);
                     return '<p><strong>' + data["personName"] + '</strong></p>';
                 }
             }

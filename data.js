@@ -15,6 +15,7 @@ function generateCreditsRequest(mediaId, mediaType) {
 
 function generateCastDb() {
     var castDb = [];
+    var nameMapping = {};
 
     for (m = 0; m < mediaDb.length; m++) {
         $.ajax({
@@ -23,17 +24,32 @@ function generateCastDb() {
             async: false,
             success: function(data) {
                 for (i = 0; i < data.cast.length; i++) {
-                    castDb.push({"mediaId": mediaDb[m].id,
-                                 "mediaType": mediaDb[m].type, 
-                                 "characterName": data.cast[i].character, 
-                                 "personName": data.cast[i].name,
-                                 "personId": data.cast[i].id
-                                });
+                    var castObj = data.cast[i];
+                    var appearance = {"mediaId": mediaDb[m].id,
+                                      "mediaType": mediaDb[m].type, 
+                                      "characterName": castObj.character
+                                     }
+                    nameMapping[castObj.id] = castObj.name;            
+                    if (castDb[castObj.id] == undefined) {
+                        castDb[castObj.id] = [appearance];
+                    }
+                    else {
+                        castDb[castObj.id].push(appearance);
+                    }
                 }
             }
         });
     }
 
-    return castDb;
+    var castDbArray = [];
+    for (personId in castDb) {
+        castDbArray.push({"personId": personId,
+                          "personName": nameMapping[personId],
+                          "appearances": castDb[personId]
+                         });
+    }
+
+    console.log(castDbArray)
+    return castDbArray;
 }
     
