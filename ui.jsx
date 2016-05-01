@@ -6,10 +6,34 @@ var App = React.createClass({
         };
     },
 
+    generateFilmographyRequest: function(personId) {
+        return "http://api.themoviedb.org/3/person/" + personId + "/combined_credits?api_key=" + TMDbAPIKey;
+    },
+
     handleSearchResult: function(bioPersonData) {
+        var otherAppearances = [];
+        $.ajax({
+            type: 'get',
+            url: this.generateFilmographyRequest(bioPersonData.personId),
+            async: false,
+            success: function(data) {
+                for (var i = 0; i < data.cast.length; i++) {
+                    var castObj = data.cast[i];
+                    var appearance = {
+                                      "mediaTitle": castObj.original_title,
+                                      "characterName": castObj.character,
+                                      "mediaType": castObj.media_type
+                                     }
+                    otherAppearances.push(appearance);
+                }
+            }
+        });
+
+        bioPersonData.filmography = otherAppearances;
+
         this.setState({
             "bioActive": true,
-            "bioPersonData": bioPersonData
+            "bioPersonData": bioPersonData,
         });
     },
 
@@ -70,8 +94,10 @@ var SearchBox = React.createClass({
                 success: function(data) {
                     for (var i = 0; i < data.cast.length; i++) {
                         var castObj = data.cast[i];
-                        var appearance = {"mediaId": mediaDb[m].id,
+                        var appearance = {
+                                          "mediaId": mediaDb[m].id,
                                           "mediaType": mediaDb[m].type,
+                                          "mediaTitle": mediaDb[m].title,
                                           "characterName": castObj.character
                                          }
                         nameMapping[castObj.id] = castObj.name;            
@@ -87,6 +113,7 @@ var SearchBox = React.createClass({
         }
 
         var castDbArray = [];
+
         for (var personId in castDb) {
             castDbArray.push({"personId": personId,
                               "personName": nameMapping[personId],
@@ -104,7 +131,7 @@ var SearchBox = React.createClass({
             local: this.generateCastDb()
         });
 
-        $('#app-container .search-box').typeahead({
+        $(this.refs.searchBox).typeahead({
             hint: true,
             highlight: true,
             minLength: 1
@@ -129,6 +156,7 @@ var SearchBox = React.createClass({
     render: function() {
         return (
             <input
+                ref = "searchBox"
                 className="search-box"
                 type="text"
                 placeholder="Name"
@@ -141,14 +169,19 @@ var Bio = React.createClass({
     render: function() {
         var bioPersonData = this.props.appState.bioPersonData;
         var bioHeading = (this.props.appState.bioActive) ? bioPersonData.personName : ""
+        
         var mcuAppearancesList;
+        var otherFilmography;
+        
         if (this.props.appState.bioActive) {
             mcuAppearancesList = <MCUAppearancesList appearances={bioPersonData.appearances} />
+            otherFilmography = <OtherAppearancesList filmography={bioPersonData.filmography} />
         }
         return (
             <div className="bio">
                 <h1>{bioHeading}</h1>
                 {mcuAppearancesList}
+                {otherFilmography}
             </div>
         );
     }
@@ -163,11 +196,12 @@ var MCUAppearancesList = React.createClass({
                     {this.props.appearances.map(function(appearance) {
                         return <AppearancesListItem 
                                     key={appearance.mediaId + appearance.characterName}
-                                    mediaId={appearance.mediaId}
                                     mediaType={appearance.mediaType}
+                                    mediaTitle={appearance.mediaTitle}
                                     characterName={appearance.characterName}
                                />;
-                    })}
+                        })
+                    }
                 </ul>
             </div>
         );
@@ -175,53 +209,45 @@ var MCUAppearancesList = React.createClass({
 });
 
 var OtherAppearancesList = React.createClass({
-    // lookUpAppearances: function() {
+    // getInitialState: function() {
+    //     return {
+    //         filmography: []
+    //     };
+    // },
 
+    // componentDidMount: function() {
+    //     var otherAppearancesList = this;
+    //     this.getFilmography(this.props.personId, function(otherAppearances) {
+    //         otherAppearancesList.setState({
+    //             filmography: otherAppearances
+    //         });
+    //     });
     // },
 
     render: function() {
         return (
             <div className="other-appearances">
                 <h2>Also seen in</h2>
-
+                <ul className="filmography-list">
+                    {this.props.filmography.map(function(appearance) {
+                        return <AppearancesListItem 
+                                    key={appearance.mediaTitle + appearance.characterName}
+                                    mediaType={appearance.mediaType}
+                                    mediaTitle={appearance.mediaTitle}
+                                    characterName={appearance.characterName}
+                               />;
+                        })
+                    }
+                </ul>
             </div>
         );
     }
 });
 
 var AppearancesListItem = React.createClass({
-    getInitialState: function() {
-        return {
-            "characterName": this.props.characterName,
-            "mediaTitle": "Loading."
-        };
-    },
-
-    generateMediaRequest: function(mediaId, mediaType) {
-        return "http://api.themoviedb.org/3/" + mediaType + "/" + mediaId + "?api_key=" + TMDbAPIKey;
-    },
-
-    getMediaTitle: function(mediaId, mediaType, cb) {
-        $.ajax({
-            type: 'get',
-            url: this.generateMediaRequest(mediaId, mediaType), 
-            async: false,
-            success: function(data) {
-                cb(data.title);
-            }
-        });
-    },
-
-    componentDidMount: function() {
-        var appearancesListItem = this;
-        var mediaTitle = this.getMediaTitle(this.props.mediaId, this.props.mediaType, function(mediaTitle) {
-            appearancesListItem.setState({"mediaTitle": mediaTitle});
-        });
-    },
-
     render: function() {
         return (
-            <li><strong>{this.state.characterName}</strong> // {this.state.mediaTitle}</li>
+            <li><strong>{this.props.characterName}</strong> // {this.props.mediaTitle}</li>
         );
     }
 });
