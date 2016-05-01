@@ -1,0 +1,76 @@
+ul {
+    list-style-type: none;
+}
+
+.brand-title {
+    color: #fff;
+}
+
+.header {
+    background-color: #d11d0e;
+    padding: 10rem 5rem;
+    height: 20rem;
+    position: relative;
+}
+.slanter {
+    position:absolute; 
+    bottom:0; 
+    left:0; 
+    width:100%;
+    height:10em;
+    fill: #fff;
+}
+
+.search-box {
+    height: 5vh;
+    width: 40vw;
+}
+
+.bio {
+    text-align: right;
+    /*margin-top: 5rem;*/
+    padding: 0 5rem;
+}
+
+
+/* ============ TYPEAHEAD STYLING ============ */
+
+.tt-input,
+.tt-hint {
+    padding: 8px 12px;
+    font-size: 24px;
+    line-height: 30px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+}
+
+.tt-hint {
+    color: #999;
+}
+
+.tt-menu {
+    width: 422px;
+    margin-top: 12px;
+    padding: 8px 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    box-shadow: 0 5px 10px rgba(0,0,0,.2);
+}
+
+.tt-suggestion {
+    padding: 3px 20px;
+    font-size: 18px;
+    line-height: 24px;
+}
+
+.tt-suggestion.tt-is-under-cursor {
+    color: #fff;
+    background-color: #0097cf;
+}
+
+.tt-suggestion p {
+    margin: 0;
+}
