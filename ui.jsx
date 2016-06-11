@@ -10,8 +10,13 @@ var App = React.createClass({
         return "http://api.themoviedb.org/3/person/" + personId + "/combined_credits?api_key=" + TMDbAPIKey;
     },
 
+    // Handles searching for appearances outside the MCU
+    // Ideally should be in search, but this is a slightly hacky way to let
+    // it bubble view changes to results viewing section of the UI
     handleSearchResult: function(bioPersonData) {
         var otherAppearances = [];
+        var appearances = bioPersonData["appearances"];
+
         $.ajax({
             type: 'get',
             url: this.generateFilmographyRequest(bioPersonData.personId),
@@ -19,18 +24,25 @@ var App = React.createClass({
             success: function(data) {
                 for (var i = 0; i < data.cast.length; i++) {
                     var castObj = data.cast[i];
+                    // Weed out weird listings
+                    if (castObj.character.length == 0 || castObj.original_title.length == 0) continue;
+                    // Weed out MCU appearances
+                    if (appearances.filter(function(a){ return a["characterName"] == castObj.character }).length > 0) continue;
+                    // Create non-MCU appearance object
                     var appearance = {
                                       "mediaTitle": castObj.original_title,
                                       "characterName": castObj.character,
                                       "mediaType": castObj.media_type
                                      }
                     otherAppearances.push(appearance);
+                    if (i >= 20) break;
                 }
             }
         });
 
         bioPersonData.filmography = otherAppearances;
 
+        // Time to display results
         this.setState({
             "bioActive": true,
             "bioPersonData": bioPersonData,
@@ -82,6 +94,7 @@ var SearchBox = React.createClass({
         return "http://api.themoviedb.org/3/" + mediaType + "/" + mediaId + "/credits?api_key=" + TMDbAPIKey;
     },
 
+    // Ideally called once, on page load, generates internal index of MCU appearances
     generateCastDb: function() {
         var castDb = [];
         var nameMapping = {};
@@ -124,6 +137,8 @@ var SearchBox = React.createClass({
         return castDbArray;
     },
 
+    // Search box mounted by React (on page-load), time to generate search index
+    // and set up Typeahead for suggestions
     componentDidMount: function() {
         var people = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace("personName"),
@@ -148,8 +163,8 @@ var SearchBox = React.createClass({
         }).on("typeahead:selected typeahead:autocompleted", this.handleSearchResult);
     },
 
+    // Bubbles up search query to App level
     handleSearchResult(e, personData) {
-        console.log(personData);
         this.props.handleSearchResult(personData);
     },
 
@@ -209,21 +224,6 @@ var MCUAppearancesList = React.createClass({
 });
 
 var OtherAppearancesList = React.createClass({
-    // getInitialState: function() {
-    //     return {
-    //         filmography: []
-    //     };
-    // },
-
-    // componentDidMount: function() {
-    //     var otherAppearancesList = this;
-    //     this.getFilmography(this.props.personId, function(otherAppearances) {
-    //         otherAppearancesList.setState({
-    //             filmography: otherAppearances
-    //         });
-    //     });
-    // },
-
     render: function() {
         return (
             <div className="other-appearances">
@@ -252,4 +252,6 @@ var AppearancesListItem = React.createClass({
     }
 });
 
+
+// Kick off all the magic
 ReactDOM.render(<App/>, document.getElementById("app-container"));
