@@ -2,12 +2,17 @@ var App = React.createClass({
     getInitialState: function() {
         return {
             "bioActive": false,
-            "bioPersonData": null
+            "bioPersonData": null,
+            "bioPersonImageUrl": null
         };
     },
 
     generateFilmographyRequest: function(personId) {
         return "http://api.themoviedb.org/3/person/" + personId + "/combined_credits?api_key=" + TMDbAPIKey;
+    },
+
+    generateProfilePictureRequest: function(personId) {
+        return "http://api.themoviedb.org/3/person/" + personId + "/images?api_key=" + TMDbAPIKey;
     },
 
     // Handles searching for appearances outside the MCU
@@ -25,12 +30,12 @@ var App = React.createClass({
                 for (var i = 0; i < data.cast.length; i++) {
                     var castObj = data.cast[i];
                     // Weed out weird listings
-                    if (castObj.character.length == 0 || castObj.original_title.length == 0) continue;
-                    // Weed out MCU appearances
+                    if (castObj.character.length == 0 || (castObj.original_title || castObj.original_name).length == 0) continue;
+                    // Weed out MCU appearances (lazily)
                     if (appearances.filter(function(a){ return a["characterName"] == castObj.character }).length > 0) continue;
                     // Create non-MCU appearance object
                     var appearance = {
-                                      "mediaTitle": castObj.original_title,
+                                      "mediaTitle": (castObj.original_title || castObj.original_name),
                                       "characterName": castObj.character,
                                       "mediaType": castObj.media_type
                                      }
@@ -42,10 +47,24 @@ var App = React.createClass({
 
         bioPersonData.filmography = otherAppearances;
 
-        // Time to display results
+        var bioPersonImageUrl;
+        $.ajax({
+            type: 'get',
+            url: this.generateProfilePictureRequest(bioPersonData.personId),
+            async: false,
+            success: function(data) {
+                // For some reason, many profile photos indexed 2 seemed to be flattering and new
+                // Sometimes it doesn't exist, so I fall back on 0
+                // Just... don't ask questions and move on
+                bioPersonImageUrl = "http://image.tmdb.org/t/p/original" + (data.profiles[2] || data.profiles[0]).file_path;
+            }
+        });
+
+        // It's time to display results
         this.setState({
             "bioActive": true,
             "bioPersonData": bioPersonData,
+            "bioPersonImageUrl": bioPersonImageUrl
         });
     },
 
@@ -79,7 +98,7 @@ var Header = React.createClass({
     render: function() {
         return (
             <div ref="header" className="header">
-                <h1 className="brand-title">Untitled MCU Cast Browser</h1>
+                <h1 className="brand-title">The MCU Index&nbsp;&nbsp;<img className="brand-logo" src="media/logo.png"></img></h1>
                 <SearchBox handleSearchResult={this.props.handleSearchResult} />
                 <svg className="slanter" viewBox="0 0 100 100" preserveAspectRatio="none">
                     <polygon points="0,100  100,100  200,0" />
@@ -90,46 +109,95 @@ var Header = React.createClass({
 });
 
 var SearchBox = React.createClass({
-    generateCreditsRequest: function(mediaId, mediaType) {
-        return "http://api.themoviedb.org/3/" + mediaType + "/" + mediaId + "/credits?api_key=" + TMDbAPIKey;
+    generateMovieCreditsRequest: function(mediaId) {
+        return "http://api.themoviedb.org/3/movie/" + mediaId + "/credits?api_key=" + TMDbAPIKey;
+    },
+
+    generateTvDetailsRequest: function(mediaId) {
+        return "http://api.themoviedb.org/3/tv/" + mediaId + "?api_key=" + TMDbAPIKey;
+    },
+
+    generateSeasonCreditsRequest: function(mediaId, seasonNum) {
+        return "http://api.themoviedb.org/3/tv/" + mediaId + "/season/" + seasonNum + "/credits?api_key=" + TMDbAPIKey;
+    },
+
+    processCast: function(mediaDbItem, castDb, personIdToName, seasonNum = null) {
+        $.ajax({
+            type: 'get',
+            url: (!seasonNum) ? 
+                this.generateMovieCreditsRequest(mediaDbItem.id) :
+                this.generateSeasonCreditsRequest(mediaDbItem.id, seasonNum),
+            async: false,
+            success: function(data) {
+                for (var i = 0; i < data.cast.length; i++) {
+                    var castObj = data.cast[i];
+                    var appearance = {
+                                      "mediaId": mediaDbItem.id,
+                                      "mediaType": mediaDbItem.type,
+                                      "mediaTitle": mediaDbItem.title,
+                                      "characterName": castObj.character
+                                     }
+                    if (seasonNum) {
+                        appearance["mediaTitle"] += " (Season " + seasonNum + ")";
+                    }
+                    personIdToName[castObj.id] = castObj.name;            
+                    if (castDb[castObj.id] == undefined) {
+                        castDb[castObj.id] = [appearance];
+                    }
+                    else {
+                        castDb[castObj.id].push(appearance);
+                    }
+                }
+            }
+        });
+
+        return {"castDb": castDb, "personIdToName": personIdToName};
+    },
+
+    getNumberOfSeasons: function(mediaId) {
+        var numOfSeasons = 0;
+
+        $.ajax({
+                type: 'get',
+                url: this.generateTvDetailsRequest(mediaId), 
+                async: false,
+                success: function(data) {
+                    numOfSeasons = data.number_of_seasons;
+                }
+            }
+        );
+
+        return numOfSeasons;
     },
 
     // Ideally called once, on page load, generates internal index of MCU appearances
     generateCastDb: function() {
         var castDb = [];
-        var nameMapping = {};
+        var personIdToName = {};
 
+        // If current item is movie
         for (var m = 0; m < mediaDb.length; m++) {
-            $.ajax({
-                type: 'get',
-                url: this.generateCreditsRequest(mediaDb[m].id, mediaDb[m].type), 
-                async: false,
-                success: function(data) {
-                    for (var i = 0; i < data.cast.length; i++) {
-                        var castObj = data.cast[i];
-                        var appearance = {
-                                          "mediaId": mediaDb[m].id,
-                                          "mediaType": mediaDb[m].type,
-                                          "mediaTitle": mediaDb[m].title,
-                                          "characterName": castObj.character
-                                         }
-                        nameMapping[castObj.id] = castObj.name;            
-                        if (castDb[castObj.id] == undefined) {
-                            castDb[castObj.id] = [appearance];
-                        }
-                        else {
-                            castDb[castObj.id].push(appearance);
-                        }
-                    }
+            if (mediaDb[m].type == "movie") {
+                var movieCastData = this.processCast(mediaDb[m], castDb, personIdToName);
+                castDb = movieCastData["castDb"];
+                personIdToName = movieCastData["personIdToName"];
+            }
+            // TV shows require requests for each season
+            else if (mediaDb[m].type == "tv") {
+                var numOfSeasons = this.getNumberOfSeasons(mediaDb[m].id);
+                for (var s = 0; s < numOfSeasons; s++) {
+                    var seasonCastData = this.processCast(mediaDb[m], castDb, personIdToName, s+1);
+                    castDb = seasonCastData["castDb"];
+                    personIdToName = seasonCastData["personIdToName"];
                 }
-            });
-        }
+            }
+        } 
 
         var castDbArray = [];
 
         for (var personId in castDb) {
             castDbArray.push({"personId": personId,
-                              "personName": nameMapping[personId],
+                              "personName": personIdToName[personId],
                               "appearances": castDb[personId]
                              });
         }
@@ -183,6 +251,7 @@ var SearchBox = React.createClass({
 var Bio = React.createClass({
     render: function() {
         var bioPersonData = this.props.appState.bioPersonData;
+        var bioPersonImageUrl = this.props.appState.bioPersonImageUrl;
         var bioHeading = (this.props.appState.bioActive) ? bioPersonData.personName : ""
         
         var mcuAppearancesList;
@@ -195,6 +264,7 @@ var Bio = React.createClass({
         return (
             <div className="bio">
                 <h1>{bioHeading}</h1>
+                <img className="bio-image" src={bioPersonImageUrl}></img>
                 {mcuAppearancesList}
                 {otherFilmography}
             </div>
@@ -209,13 +279,22 @@ var MCUAppearancesList = React.createClass({
                 <h2>Appeared in</h2>
                 <ul className="appearances-list">
                     {this.props.appearances.map(function(appearance) {
-                        return <AppearancesListItem 
-                                    key={appearance.mediaId + appearance.characterName}
-                                    mediaType={appearance.mediaType}
-                                    mediaTitle={appearance.mediaTitle}
-                                    characterName={appearance.characterName}
-                               />;
-                        })
+                        var mediaTypeImg = "media/other-label.png";
+                        switch(appearance["mediaType"]) {
+                            case ("movie"):
+                                mediaTypeImg = "media/movie-label.png";
+                            break;
+                            case ("tv"):
+                                mediaTypeImg = "media/tv-label.png";
+                            break;
+                        }
+                        return (
+                            <li>
+                                <strong>{appearance.characterName}</strong> // {appearance.mediaTitle}&nbsp;&nbsp;
+                                <img className="media-type-label" src={mediaTypeImg}></img>
+                            </li>
+                        );
+                    })
                     }
                 </ul>
             </div>
@@ -230,13 +309,8 @@ var OtherAppearancesList = React.createClass({
                 <h2>Also seen in</h2>
                 <ul className="filmography-list">
                     {this.props.filmography.map(function(appearance) {
-                        return <AppearancesListItem 
-                                    key={appearance.mediaTitle + appearance.characterName}
-                                    mediaType={appearance.mediaType}
-                                    mediaTitle={appearance.mediaTitle}
-                                    characterName={appearance.characterName}
-                               />;
-                        })
+                        return (<li><strong>{appearance.characterName}</strong> // {appearance.mediaTitle} </li>);
+                    })
                     }
                 </ul>
             </div>
@@ -247,7 +321,7 @@ var OtherAppearancesList = React.createClass({
 var AppearancesListItem = React.createClass({
     render: function() {
         return (
-            <li><strong>{this.props.characterName}</strong> // {this.props.mediaTitle}</li>
+            <li><strong>{this.props.characterName}</strong> // {this.props.mediaTitle} </li>
         );
     }
 });

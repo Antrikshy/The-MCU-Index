@@ -20,5 +20,5 @@ var mediaDb = [
     {"id": "1403", "type": "tv", "title": "Marvel's Agents of S.H.I.E.L.D."},
     {"id": "61550", "type": "tv", "title": "Marvel's Agent Carter"},
     {"id": "61889", "type": "tv", "title": "Marvel's Daredevil"},
-    {"id": "38472", "type": "tv", "title": "Marvel's Jessica Jones"},
+    {"id": "38472", "type": "tv", "title": "Marvel's Jessica Jones"}
 ];
