@@ -1,6 +1,11 @@
 body {
+    font-family: -apple-system, "Helvetica Neue", "Helvetica", "Arial", sans-serif;
     color: #444;
     padding-bottom: 5rem;
+}
+
+a {
+    color: #fff;
 }
 
 ul {
@@ -49,6 +54,21 @@ ul {
 }
 
 .media-type-label {
+    height: 15px;
+    position: relative;
+    top: 2px;
+}
+
+footer {
+    width: 99vw;
+    color: #fff;
+    padding: 1rem 0 1rem 1vw;
+    background-color: #d11d0e;
+    position: fixed;
+    bottom: 0;
+}
+
+img.footer-inline-logo {
     height: 15px;
     position: relative;
     top: 2px;
