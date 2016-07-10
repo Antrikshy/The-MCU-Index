@@ -83,8 +83,8 @@ var Header = React.createClass({
     componentDidUpdate: function(prevProps) {
         if (prevProps.height == "large" && this.props.height == "small") {
             $(this.refs.header).animate({
-                "height": "10rem",
-                "padding-top": "2rem"
+                "height": "15rem",
+                "padding-top": "1rem"
             });
         }
         else if (prevProps.height == "small" && this.props.height == "large") {
@@ -229,6 +229,16 @@ var SearchBox = React.createClass({
                 }
             }
         }).on("typeahead:selected typeahead:autocompleted", this.handleSearchResult);
+
+        // Listen for Enter key and auto-fill top suggestion
+        var searchBoxRef = $(this.refs.searchBox);
+        searchBoxRef.keydown(function(e) {
+            if (e.which == 13) { // 13 == Enter key
+                var dummyEvent = $.Event('keydown');
+                dummyEvent.which = dummyEvent.keyCode = 9; // 9 == Tab key
+                searchBoxRef.trigger(dummyEvent);
+            }
+        });
     },
 
     // Bubbles up search query to App level
@@ -290,7 +300,8 @@ var MCUAppearancesList = React.createClass({
                         }
                         return (
                             <li>
-                                <strong>{appearance.characterName}</strong> // {appearance.mediaTitle}&nbsp;&nbsp;
+                                <strong>{appearance.characterName}</strong> // {appearance.mediaTitle}
+                                <br className="small-screen-br" />&nbsp;&nbsp;
                                 <img className="media-type-label" src={mediaTypeImg}></img>
                             </li>
                         );
@@ -304,17 +315,25 @@ var MCUAppearancesList = React.createClass({
 
 var OtherAppearancesList = React.createClass({
     render: function() {
-        return (
-            <div className="other-appearances">
-                <h2>Also seen in</h2>
-                <ul className="filmography-list">
-                    {this.props.filmography.map(function(appearance) {
-                        return (<li><strong>{appearance.characterName}</strong> // {appearance.mediaTitle} </li>);
-                    })
-                    }
-                </ul>
-            </div>
-        );
+        if (this.props.filmography.length > 0) {
+            return (
+                <div className="other-appearances">
+                    <h2>Also seen in</h2>
+                    <ul className="filmography-list">
+                        {this.props.filmography.map(function(appearance) {
+                            return (<li><strong>{appearance.characterName}</strong> // {appearance.mediaTitle} </li>);
+                        })
+                        }
+                    </ul>
+                </div>
+            );
+        }
+
+        else {
+            return (
+                <br/>
+            );
+        }
     }
 });
 
@@ -327,5 +346,9 @@ var AppearancesListItem = React.createClass({
 });
 
 
-// Kick off all the magic
-ReactDOM.render(<App/>, document.getElementById("app-container"));
+window.setTimeout(function() {
+    // Kick off all the magic
+    ReactDOM.render(<App/>, document.getElementById("app-container"));
+    $(".loading-overlay").fadeOut();
+    $("footer").fadeIn();
+}, 1000);

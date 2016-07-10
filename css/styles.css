@@ -1,5 +1,6 @@
 body {
     font-family: -apple-system, "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+    font-size: 100%;
     color: #444;
     padding-bottom: 5rem;
 }
@@ -10,6 +11,18 @@ a {
 
 ul {
     list-style-type: none;
+}
+
+.loading-overlay {
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    font-size: 10rem;
+    background-color: #fff;
+    color: #d11d0e;
+    opacity: 0.8;
+    text-align: right;
+    z-index: 100;
 }
 
 .brand-title {
@@ -47,10 +60,14 @@ ul {
     padding: 0 5rem;
 }
 
+.small-screen-br {
+    display: none;
+}
+
 .bio-image {
-    height: 350px;
+    height: 20rem;
     position: absolute;
-    left: 5rem;
+    left: 10rem;
 }
 
 .media-type-label {
@@ -62,16 +79,64 @@ ul {
 footer {
     width: 99vw;
     color: #fff;
-    padding: 1rem 0 1rem 1vw;
+    padding: 5px;
+    padding-right: 1vw;
     background-color: #d11d0e;
     position: fixed;
     bottom: 0;
+    display: none;
 }
 
 img.footer-inline-logo {
     height: 15px;
     position: relative;
     top: 2px;
+}
+
+
+@media only screen  
+  and (max-width: 820px) {
+
+    body {
+        font-size: 90%;
+    }
+
+    .loading-overlay {
+        font-size: 5rem;
+    }
+
+    .header {
+        padding: 1rem 1rem;
+    }
+
+    .bio {
+        padding: 0 2rem;
+    }
+
+    .bio-image {
+        position: static;
+    }
+
+    .small-screen-br {
+        display: inline;
+    }
+
+    .search-box,
+    .tt-menu {
+        width: 80vw !important;
+    }
+
+    footer {
+        padding: 2px;
+    }
+}
+
+@media only screen  
+  and (max-width: 360px) {
+
+    body {
+        font-size: 70%;
+    }
 }
 
 
@@ -84,8 +149,7 @@ span.twitter-typeahead {
 .tt-input,
 .tt-hint {
     padding: 8px 12px;
-    font-size: 24px;
-    line-height: 30px;
+    font-size: 1.5rem;
     border: 2px solid #ccc;
     border-radius: 8px;
     outline: none;
@@ -96,7 +160,7 @@ span.twitter-typeahead {
 }
 
 .tt-menu {
-    width: 422px;
+    width: 40vw;
     margin-top: 12px;
     padding: 8px 0;
     background-color: #fff;
@@ -108,13 +172,15 @@ span.twitter-typeahead {
 
 .tt-suggestion {
     padding: 3px 20px;
-    font-size: 18px;
+    margin: 0;
+    font-size: 1rem;
     line-height: 24px;
 }
 
-.tt-suggestion.tt-is-under-cursor {
+.tt-suggestion.tt-cursor,
+.tt-suggestion:hover {
     color: #fff;
-    background-color: #0097cf;
+    background-color: #d11d0e !important;
 }
 
 .tt-suggestion p {
