@@ -93,12 +93,20 @@ img.footer-inline-logo {
     top: 2px;
 }
 
+span.footer-credits {
+    float: right;
+}
+
 
 @media only screen  
   and (max-width: 820px) {
 
     body {
         font-size: 90%;
+    }
+
+    .hide-on-small-screen {
+        display: none;
     }
 
     .loading-overlay {
@@ -128,6 +136,10 @@ img.footer-inline-logo {
 
     footer {
         padding: 2px;
+    }
+
+    span.footer-credits {
+        float: none;
     }
 }
 
