@@ -4,11 +4,11 @@
 
 The MCU Index (MCUi for short) is a single-page static website that I designed as a pet project to teach myself React, the popular UI library from Facebook. It's a simple tool to look up actors who have appeared in the Marvel Cinematic Universe, by name. Due to API limitations, it doesn't work very well for the TV shows, sadly. Only major characters show up for these properties.
 
-### **[Check it out!](http://antrikshy.com/The-MCU-Index/)**
+### **[Visit MCUi](http://antrikshy.com/The-MCU-Index/)**
 
 ## Design
 
-MCUi is built using React and (of course) jQuery. I supercharged the search box using Typeahead from Twitter. I have wanted to find an excuse to play around with [Typeahead](https://twitter.github.io/typeahead.js/examples/) for months now. It's a very flexible front-end library to help create auto-fill suggestions for input fields.
+MCUi is built using React. I supercharged the search box using Typeahead from Twitter. I have wanted to find an excuse to play around with [Typeahead](https://twitter.github.io/typeahead.js/examples/) for months now. It's a very flexible front-end library to help create auto-fill suggestions for input fields.
 
 The website is powered by [The Movie Database](https://www.themoviedb.org)'s free API. While it's great for movies, it unfortunately does not track all cast from TV episodes. Only major characters are listed, and I even had to manually iterate over all past seasons and request cast members for each one.
 
