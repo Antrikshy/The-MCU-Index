@@ -252,7 +252,7 @@ var SearchBox = React.createClass({
                 ref = "searchBox"
                 className="search-box"
                 type="text"
-                placeholder="Name"
+                placeholder="Search MCU actors"
             />
         );
     }
