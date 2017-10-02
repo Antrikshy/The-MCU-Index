@@ -24,6 +24,7 @@ var mediaDb = [
     {"id": "61550", "type": "tv", "title": "Marvel's Agent Carter"},
     {"id": "61889", "type": "tv", "title": "Marvel's Daredevil"},
     {"id": "38472", "type": "tv", "title": "Marvel's Jessica Jones"},
-    {"id": "62126", "type": "tv", "title": "Marvel's Luke Cage"}
-    {"id": "62127", "type": "tv", "title": "Marvel's Iron Fist"}
+    {"id": "62126", "type": "tv", "title": "Marvel's Luke Cage"},
+    {"id": "62127", "type": "tv", "title": "Marvel's Iron Fist"},
+    {"id": "62285", "type": "tv", "title": "Marvel's The Defenders"}
 ];
