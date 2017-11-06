@@ -18,6 +18,7 @@ var mediaDb = [
     {"id": "284052", "type": "movie", "title": "Doctor Strange"},
     {"id": "283995", "type": "movie", "title": "Guardians of the Galaxy Vol. 2"},
     {"id": "315635", "type": "movie", "title": "Spider-Man: Homecoming"},
+    {"id": "284053", "type": "movie", "title": "Thor: Ragnarok"},
 
     // TV shows
     {"id": "1403", "type": "tv", "title": "Marvel's Agents of S.H.I.E.L.D."},
@@ -26,5 +27,6 @@ var mediaDb = [
     {"id": "38472", "type": "tv", "title": "Marvel's Jessica Jones"},
     {"id": "62126", "type": "tv", "title": "Marvel's Luke Cage"},
     {"id": "62127", "type": "tv", "title": "Marvel's Iron Fist"},
-    {"id": "62285", "type": "tv", "title": "Marvel's The Defenders"}
+    {"id": "62285", "type": "tv", "title": "Marvel's The Defenders"},
+    {"id": "68716", "type": "tv", "title": "Marvel's Inhumans"}
 ];
