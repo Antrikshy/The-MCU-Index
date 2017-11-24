@@ -28,5 +28,7 @@ var mediaDb = [
     {"id": "62126", "type": "tv", "title": "Marvel's Luke Cage"},
     {"id": "62127", "type": "tv", "title": "Marvel's Iron Fist"},
     {"id": "62285", "type": "tv", "title": "Marvel's The Defenders"},
-    {"id": "68716", "type": "tv", "title": "Marvel's Inhumans"}
+    {"id": "68716", "type": "tv", "title": "Marvel's Inhumans"},
+    {"id": "67178", "type": "tv", "title": "Marvel's The Punisher"},
+    {"id": "67466", "type": "tv", "title": "Marvel's Runaways"}
 ];
