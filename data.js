@@ -20,6 +20,7 @@ var mediaDb = [
     {"id": "315635", "type": "movie", "title": "Spider-Man: Homecoming"},
     {"id": "284053", "type": "movie", "title": "Thor: Ragnarok"},
     {"id": "284054", "type": "movie", "title": "Black Panther"},
+    {"id": "299536", "type": "movie", "title": "Avengers: Infinity War"},
 
     // TV shows
     {"id": "1403", "type": "tv", "title": "Marvel's Agents of S.H.I.E.L.D."},
