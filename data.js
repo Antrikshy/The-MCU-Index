@@ -24,6 +24,7 @@ var mediaDb = [
     {"id": "363088", "type": "movie", "title": "Ant-Man and the Wasp"},
     {"id": "299537", "type": "movie", "title": "Captain Marvel"},
     {"id": "299534", "type": "movie", "title": "Avengers: Endgame"},
+    {"id": "429617", "type": "movie", "title": "Spider-Man: Far from Home"},
 
     // TV shows
     {"id": "1403", "type": "tv", "title": "Marvel's Agents of S.H.I.E.L.D."},
