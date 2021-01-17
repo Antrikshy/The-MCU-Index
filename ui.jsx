@@ -8,11 +8,11 @@ var App = React.createClass({
     },
 
     generateFilmographyRequest: function(personId) {
-        return "http://api.themoviedb.org/3/person/" + personId + "/combined_credits?api_key=" + TMDbAPIKey;
+        return "https://api.themoviedb.org/3/person/" + personId + "/combined_credits?api_key=" + TMDbAPIKey;
     },
 
     generateProfilePictureRequest: function(personId) {
-        return "http://api.themoviedb.org/3/person/" + personId + "/images?api_key=" + TMDbAPIKey;
+        return "https://api.themoviedb.org/3/person/" + personId + "/images?api_key=" + TMDbAPIKey;
     },
 
     // Handles searching for appearances outside the MCU
@@ -56,7 +56,7 @@ var App = React.createClass({
                 // For some reason, many profile photos indexed 2 seemed to be flattering and new
                 // Sometimes it doesn't exist, so I fall back on 0
                 // Just... don't ask questions and move on
-                bioPersonImageUrl = "http://image.tmdb.org/t/p/original" + (data.profiles[2] || data.profiles[0]).file_path;
+                bioPersonImageUrl = "https://image.tmdb.org/t/p/original" + (data.profiles[2] || data.profiles[0]).file_path;
             }
         });
 
@@ -110,15 +110,15 @@ var Header = React.createClass({
 
 var SearchBox = React.createClass({
     generateMovieCreditsRequest: function(mediaId) {
-        return "http://api.themoviedb.org/3/movie/" + mediaId + "/credits?api_key=" + TMDbAPIKey;
+        return "https://api.themoviedb.org/3/movie/" + mediaId + "/credits?api_key=" + TMDbAPIKey;
     },
 
     generateTvDetailsRequest: function(mediaId) {
-        return "http://api.themoviedb.org/3/tv/" + mediaId + "?api_key=" + TMDbAPIKey;
+        return "https://api.themoviedb.org/3/tv/" + mediaId + "?api_key=" + TMDbAPIKey;
     },
 
     generateSeasonCreditsRequest: function(mediaId, seasonNum) {
-        return "http://api.themoviedb.org/3/tv/" + mediaId + "/season/" + seasonNum + "/credits?api_key=" + TMDbAPIKey;
+        return "https://api.themoviedb.org/3/tv/" + mediaId + "/season/" + seasonNum + "/credits?api_key=" + TMDbAPIKey;
     },
 
     processCast: function(mediaDbItem, castDb, personIdToName, seasonNum = null) {
