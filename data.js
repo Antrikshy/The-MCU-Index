@@ -39,4 +39,5 @@ var mediaDb = [
     {"id": "67466", "type": "tv", "title": "Marvel's Runaways"},
     {"id": "66190", "type": "tv", "title": "Marvel's Cloak & Dagger"},
     {"id": "85271", "type": "tv", "title": "WandaVision"},
+    {"id": "88396", "type": "tv", "title": "The Falcon and the Winter Soldier"},
 ];
