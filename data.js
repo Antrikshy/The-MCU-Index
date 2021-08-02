@@ -25,6 +25,7 @@ var mediaDb = [
     {"id": "299537", "type": "movie", "title": "Captain Marvel"},
     {"id": "299534", "type": "movie", "title": "Avengers: Endgame"},
     {"id": "429617", "type": "movie", "title": "Spider-Man: Far from Home"},
+    {"id": "497698", "type": "movie", "title": "Black Widow"},
 
     // TV shows
     {"id": "1403", "type": "tv", "title": "Marvel's Agents of S.H.I.E.L.D."},
