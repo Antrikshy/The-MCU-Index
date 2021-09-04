@@ -26,6 +26,7 @@ var mediaDb = [
     {"id": "299534", "type": "movie", "title": "Avengers: Endgame"},
     {"id": "429617", "type": "movie", "title": "Spider-Man: Far from Home"},
     {"id": "497698", "type": "movie", "title": "Black Widow"},
+    {"id": "566525", "type": "movie", "title": "Shang-Chi and the Legend of the Ten Rings"},
 
     // TV shows
     {"id": "1403", "type": "tv", "title": "Marvel's Agents of S.H.I.E.L.D."},
@@ -42,4 +43,5 @@ var mediaDb = [
     {"id": "85271", "type": "tv", "title": "WandaVision"},
     {"id": "88396", "type": "tv", "title": "The Falcon and the Winter Soldier"},
     {"id": "84958", "type": "tv", "title": "Loki"},
+    {"id": "91363", "type": "tv", "title": "What If...?"},
 ];
