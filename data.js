@@ -27,6 +27,8 @@ var mediaDb = [
     {"id": "429617", "type": "movie", "title": "Spider-Man: Far from Home"},
     {"id": "497698", "type": "movie", "title": "Black Widow"},
     {"id": "566525", "type": "movie", "title": "Shang-Chi and the Legend of the Ten Rings"},
+    {"id": "524434", "type": "movie", "title": "Eternals"},
+    {"id": "634649", "type": "movie", "title": "Spider-Man: No Way Home"},
 
     // TV shows
     {"id": "1403", "type": "tv", "title": "Marvel's Agents of S.H.I.E.L.D."},
@@ -44,4 +46,5 @@ var mediaDb = [
     {"id": "88396", "type": "tv", "title": "The Falcon and the Winter Soldier"},
     {"id": "84958", "type": "tv", "title": "Loki"},
     {"id": "91363", "type": "tv", "title": "What If...?"},
+    {"id": "88329", "type": "tv", "title": "Hawkeye"},
 ];
