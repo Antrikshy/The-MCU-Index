@@ -29,6 +29,14 @@ var mediaDb = [
     {"id": "566525", "type": "movie", "title": "Shang-Chi and the Legend of the Ten Rings"},
     {"id": "524434", "type": "movie", "title": "Eternals"},
     {"id": "634649", "type": "movie", "title": "Spider-Man: No Way Home"},
+    {"id": "453395", "type": "movie", "title": "Doctor Strange in the Multiverse of Madness"},
+    {"id": "616037", "type": "movie", "title": "Thor: Love and Thunder"},
+    {"id": "894205", "type": "movie", "title": "Werewolf by Night"},
+    {"id": "505642", "type": "movie", "title": "Black Panther: Wakanda Forever"},
+    {"id": "774752", "type": "movie", "title": "The Guardians of the Galaxy Holiday Special"},
+    {"id": "640146", "type": "movie", "title": "Ant-Man and the Wasp: Quantumania"},
+    {"id": "447365", "type": "movie", "title": "Guardians of the Galaxy Vol. 3"},
+    {"id": "609681", "type": "movie", "title": "The Marvels"},
 
     // TV shows
     {"id": "1403", "type": "tv", "title": "Marvel's Agents of S.H.I.E.L.D."},
@@ -47,4 +55,9 @@ var mediaDb = [
     {"id": "84958", "type": "tv", "title": "Loki"},
     {"id": "91363", "type": "tv", "title": "What If...?"},
     {"id": "88329", "type": "tv", "title": "Hawkeye"},
+    {"id": "92749", "type": "tv", "title": "Moon Knight"},
+    {"id": "92782", "type": "tv", "title": "Ms. Marvel"},
+    {"id": "92783", "type": "tv", "title": "She-Hulk: Attorney at Law"},
+    {"id": "114472", "type": "tv", "title": "Secret Invasion"},
+    {"id": "122226", "type": "tv", "title": "Echo"},
 ];
